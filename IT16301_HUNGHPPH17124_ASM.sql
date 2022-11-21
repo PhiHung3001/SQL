@@ -1,0 +1,343 @@
+﻿-- TẠO DATABASE QLNHATRO
+CREATE DATABASE QLNHATRO
+GO
+USE QLNHATRO
+GO
+-- TẠO BẢNG LOAINHA
+CREATE TABLE LOAINHA(
+MALN VARCHAR(10)NOT NULL,
+TENLN NVARCHAR(50)NULL,
+CONSTRAINT PK_LOAINHA PRIMARY KEY (MALN) -- TẠO KHOÁ CHÍNH
+);
+-- TẠO BẢNG QUANHUYEN
+CREATE TABLE QUANHUYEN(
+MAQH VARCHAR(10) NOT NULL,
+TENQH NVARCHAR(50) NULL,
+CONSTRAINT PK_QUANHUYN PRIMARY KEY (MAQH) -- TẠO KHOÁ CHÍNH
+);
+-- TẠO BẢNG NHATRO
+CREATE TABLE NHATRO(
+MANT VARCHAR(10) NOT NULL,
+DIENTICH DECIMAL(8,2) NULL,
+GIAPHONG MONEY NULL,
+DIACHI NVARCHAR(50) NULL,
+MOTA NVARCHAR(100) NULL,
+NGAYDANGTIN DATETIME NULL,
+MALN VARCHAR(10) NULL,
+MAQH VARCHAR(10) NULL,
+CONSTRAINT PK_NHATRO PRIMARY KEY (MANT),-- TẠO KHOÁ CHÍNH
+CONSTRAINT FK_NHATRO_LOAINHA FOREIGN KEY (MALN) REFERENCES LOAINHA(MALN) ON DELETE CASCADE ON UPDATE CASCADE,-- TẠO KHOÁ NGOẠI
+CONSTRAINT FK_NHATRO_QUANHUYEN FOREIGN KEY (MAQH) REFERENCES QUANHUYEN(MAQH) ON DELETE CASCADE ON UPDATE CASCADE,--TẠO KHOÁ NGOẠI
+);
+
+-- TẠO BẢNG NGUOIDUNG
+CREATE TABLE NGUOIDUNG(
+MAND VARCHAR(10) NOT NULL,
+HOTENND NVARCHAR(50) NULL,
+GIOITINH NVARCHAR(5) NULL,
+SDT VARCHAR(15) NULL,
+DIACHI NVARCHAR(30) NULL,
+QUAN NVARCHAR(50) NULL,
+EMAIL NVARCHAR(50) NULL,
+CONSTRAINT PK_NGUOIDUNG PRIMARY KEY (MAND),-- TẠO KHOÁ CHÍNH
+);
+-- TẠO BẢNG ĐÁNH GIÁ
+CREATE TABLE DANHGIA(
+MAND VARCHAR(10) NOT NULL,
+MANT VARCHAR(10) NOT NULL,
+[LIKE/DISLIKE] BIT NULL,
+NOIDUNG NVARCHAR(100) NULL,
+CONSTRAINT FK_DANHGIA_NGUOIDUNG FOREIGN KEY (MAND) REFERENCES NGUOIDUNG(MAND) ON DELETE CASCADE ON UPDATE CASCADE,--TẠO KHOÁ NGOẠI
+CONSTRAINT FK_DANHGIA_NHATRO FOREIGN KEY (MANT) REFERENCES NHATRO(MANT) ON DELETE CASCADE ON UPDATE CASCADE
+);
+-- NHẬP DỮ LIỆU VÀO BẢNG LOAINHA
+INSERT INTO LOAINHA (MALN,TENLN) VALUES
+('LN01',N'CHUNG CƯ MINI'),
+('LN02',N'NHÀ TRỌ SINH VIÊN'),
+('LN03',N'STUDIO'),
+('LN04',N'CHUNG CƯ CAO CẤP'),
+('LN05',N'NHÀ Ở');
+-- NHẬP DỮ LIỆU VÀO BẢNG QUANHUYEN
+INSERT INTO QUANHUYEN(MAQH,TENQH) VALUES
+('QH01',N'HÀ ĐÔNG'),
+('QH02',N'NAM TỪ LIÊM'),
+('QH03',N'HAI BÀ TRƯNG'),
+('QH04',N'PHỐ CỔ'),
+('QH05',N'ĐỐNG ĐA');
+-- NHẬP DỮ LIỆU VÀO BẢNG NHÀ TRỌ
+INSERT INTO NHATRO(MANT,DIENTICH,GIAPHONG,DIACHI,MOTA,NGAYDANGTIN,MALN,MAQH) VALUES
+('NT01',30.5,10000000,N'SỐ 5 THÁI HÀ',N'NHÀ TO','2021-01-30','LN01','QH01'),
+('NT02',20.5,20000000,N'SỐ 4 TRỊNH VĂN BÔ',N'NHÀ RỘNG','2021-01-29','LN02','QH02'),
+('NT03',78.5,30000000,N'SỐ 6 LÊ ĐỨC THỌ',N'NHÀ ĐẸP','2021-01-28','LN03','QH03'),
+('NT04',98.9,40000000,N'SỐ 7 PHẠM VĂN ĐỒNG',N'NHÀ NHỎ','2021-01-27','LN04','QH04'),
+('NT05',106.32,50000000,N'SỐ 3 HOÀNG QUỐC VIÊT',N'NHÀ VỪA VỪA','2021-01-26','LN05','QH05');
+-- NHẬP DỮ LIỆU VÀO BẢNG NGƯỜI DÙNG
+INSERT INTO NGUOIDUNG(MAND,HOTENND,GIOITINH,SDT,DIACHI,QUAN,EMAIL) VALUES
+('ND01',N'ĐỖ MẠNH YẾU',N'NAM','0384659211',N'SỐ 1 ĐƯỜNG PHƯỜNG CANH',N'NAM TỪ LIÊM','YEUFPT@GMAIL.COM'),
+('ND02',N'ĐỖ THỦ KHOA',N'NỮ','0384743151',N'SỐ 100 ĐƯỜNG PHẠM VĂN ĐỒNG',N'CẦU GIẤY','KHOAFPT@GMAIL.COM'),
+('ND03',N'ĐỖ ONG VÀNG',N'NỮ','0384438761',N'SỐ 5 ĐƯỜNG PHẠM HÙNG',N'MỸ ĐÌNH','VANGFPT@GMAIL.COM'),
+('ND04',N'ĐỖ ĐẠI HỌC',N'NAM','0384961471',N'SỐ 100 ĐƯỜNG XUÂN PHƯƠNG',N'BẮC TỪ LIÊM','HOCFPT@GMAIL.COM'),
+('ND05',N'ĐỖ TIẾN SỸ',N'NAM','0384469811',N'SỐ 9 ĐƯỜNG LÊ ĐỨC THỌ',N'ĐỐNG ĐA','SYFPT@GMAIL.COM');
+-- NHẬP DỮ LIỆU BẢNG ĐÁNH GIÁ
+INSERT INTO DANHGIA(MAND,MANT,[LIKE/DISLIKE],NOIDUNG) VALUES
+('ND01','NT01',0,N'NHÀ ĐẸP'),
+('ND02','NT02',1,N'NHÀ XẤU'),
+('ND03','NT03',0,N'NHÀ QUÁ TUYỆT'),
+('ND04','NT04',1,N'NHÀ Ở DƠ'),
+('ND05','NT05',0,N'NHÀ AMAZING');
+
+/*1. Thêm thông tin vào các bảng
+- Tạo ba Stored Procedure (SP) với các tham số đầu vào phù hợp.
+o SP thứ nhất thực hiện chèn dữ liệu vào bảng NGUOIDUNG*/
+IF OBJECT_ID('SPINSND') IS NOT NULL
+	DROP PROC SPINSND
+GO
+CREATE PROC SPINSND
+	@MAND VARCHAR(10),@HOTENND NVARCHAR(50),@GIOITINH NVARCHAR(5),@SDT VARCHAR(15),@DIACHI NVARCHAR(50),@QUAN NVARCHAR(50),@EMAIL VARCHAR(50)
+AS
+	IF @MAND IS NULL OR @HOTENND IS NULL OR @GIOITINH IS NULL OR @SDT IS NULL OR @DIACHI IS NULL OR @QUAN IS NULL OR @EMAIL IS NULL
+		PRINT N'DỮ KHÔNG HỢP LỆ'
+	ELSE 
+		INSERT NGUOIDUNG VALUES(@MAND,@HOTENND,@GIOITINH,@SDT,@DIACHI,@QUAN,@EMAIL)
+		EXEC SPINSND 'ND01',N'TUNGTH12',N'NAM','0387496563',NULL,NULL,'TUNGTH12@FPT.EDU.VN'
+		EXEC SPINSND 'ND20',N'TUNGTH12',N'NAM','0387496563',N'HÀ TÂY','PHÚC THỌ','TUNGTH12@FPT.EDU.VN'
+/*
+o SP thứ hai thực hiện chèn dữ liệu vào bảng NHATRO*/
+IF OBJECT_ID('SPINSNT') IS NOT NULL
+	DROP PROC SPINSNT
+GO
+CREATE PROC SPINSNT
+	@MANT VARCHAR(10) ,
+@DIENTICH DECIMAL(8,2),
+@GIAPHONG MONEY,
+@DIACHI NVARCHAR(50),
+@MOTA NVARCHAR(100),
+@NGAYDANGTIN DATETIME,
+@MALN VARCHAR(10),
+@MAQH VARCHAR(10)
+AS
+	IF @MANT IS NULL OR @DIENTICH IS NULL OR @GIAPHONG IS NULL OR @DIACHI IS NULL OR @MOTA IS NULL OR @NGAYDANGTIN IS NULL OR @MALN IS NULL OR @MAQH IS NULL
+		PRINT N'DỮ KHÔNG HỢP LỆ'
+	ELSE 
+		INSERT NHATRO VALUES(@MANT,@DIENTICH,@GIAPHONG,@DIACHI,@MOTA,@NGAYDANGTIN,@MALN,@MAQH)
+EXEC SPINSNT 'NT03',N'40.7',N'300000000','SỐ 7 PHẠM VĂN ĐỒNG',NULL,'2021-03-29','LN03','QH03'
+EXEC SPINSNT  'NT03',N'40.7',N'300000000','SỐ 7 PHẠM VĂN ĐỒNG',N'NHÀ SIÊU TO','2021-03-29','LN03','QH03'
+		SELECT * FROM NHATRO
+/*o SP thứ ba thực hiện chèn dữ liệu vào bảng DANHGIA */
+IF OBJECT_ID('SPINSDG') IS NOT NULL
+	DROP PROC SPINSDG
+GO
+CREATE PROC SPINSDG
+	@MAND VARCHAR(10),
+@MANT VARCHAR(10) ,
+@LIKE BIT ,
+@NOIDUNG NVARCHAR(100)
+AS
+	IF @MANT IS NULL OR @MAND IS NULL OR @MANT IS NULL OR @LIKE IS NULL OR @NOIDUNG IS NULL 
+		PRINT N'DỮ KHÔNG HỢP LỆ'
+	ELSE 
+		INSERT DANHGIA VALUES(@MAND,@MANT,@LIKE,@NOIDUNG)
+EXEC SPINSDG 'ND20','NT01',1,N'KHÔNG PHÀN NÀN'
+SELECT * FROM NHATRO
+SELECT * FROM NGUOIDUNG
+/*
+Yêu cầu đối với các SP: Trong mỗi SP phải kiểm tra giá trị các tham số đầu vào.
+Với các cột không chấp nhận thuộc tính NULL, nếu các tham số đầu vào tương
+ứng với chúng không được truyền giá trị, thì không thực hiện câu lệnh chèn mà
+in một thông báo yêu cầu người dùng nhập liệu đầy đủ.
+- Với mỗi SP, viết hai lời gọi. Trong đó, một lời gọi thực hiện chèn thành công dữ
+liệu, và một lời gọi trả về thông báo lỗi cho người dùng.*/
+
+/*2. Truy vấn thông tin
+a. Viết một SP với các tham số đầu vào phù hợp. SP thực hiện tìm kiếm thông tin
+các phòng trọ thỏa mãn điều kiện tìm kiếm theo: Quận, phạm vi diện tích, phạm vi
+ngày đăng tin, khoảng giá tiền, loại hình nhà trọ.
+SP này trả về thông tin các phòng trọ, gồm các cột có định dạng sau:
+o Cột thứ nhất: có định dạng ‘Cho thuê phòng trọ tại’ + <Địa chỉ phòng trọ>
++ <Tên quận/Huyện>
+o Cột thứ hai: Hiển thị diện tích phòng trọ dưới định dạng số theo chuẩn Việt
+Nam + m2. Ví dụ 30,5 m2
+o Cột thứ ba: Hiển thị thông tin giá phòng dưới định dạng số theo định dạng
+chuẩn Việt Nam. Ví dụ 1.700.000
+o Cột thứ tư: Hiển thị thông tin mô tả của phòng trọ
+o Cột thứ năm: Hiển thị ngày đăng tin dưới định dạng chuẩn Việt Nam.
+Ví dụ: 27-02-2012
+o Cột thứ sáu: Hiển thị thông tin người liên hệ dưới định dạng sau:
+ Nếu giới tính là Nam. Hiển thị: A. + tên người liên hệ. Ví dụ A. Thắng
+ Nếu giới tính là Nữ. Hiển thị: C. + tên người liên hệ. Ví dụ C. Lan
+o Cột thứ bảy: Số điện thoại liên hệ
+o Cột thứ tám: Địa chỉ người liên hệ
+- Viết hai lời gọi cho SP này*/
+IF OBJECT_ID('SPTIMTTNT') IS NOT NULL
+	DROP PROC SPTIMTTNT
+GO
+CREATE PROC SPTIMTTNT
+	@MAQH VARCHAR(10),
+	@DTMIN DECIMAL(8,3),@DTMAX DECIMAL(8,2),
+	@NGAYBD DATETIME,@NGAYKT DATETIME,
+	@GIAMIN MONEY,@GIAMAX MONEY,
+	@MALN VARCHAR(10)
+AS
+	SELECT DISTINCT N'CHO THUÊ PHÒNG TRỌ TẠI:'+ NHATRO.DIACHI AS DCNT,
+	REPLACE(CAST(DIENTICH AS VARCHAR),'.',',')+ 'M2' AS DTICH,
+	REPLACE(CONVERT(VARCHAR,GIAPHONG,1),',','.') AS GIAPHONG,
+	MOTA,
+	CONVERT(VARCHAR,NGAYDANGTIN,105) AS NGAYDT,
+	CASE
+		WHEN GIOITINH = N'NAM' THEN 'A.'+ HOTENND
+		WHEN GIOITINH = N'NỮ' THEN 'C.' + HOTENND
+	END AS NGUOILH,
+	SDT,NGUOIDUNG.DIACHI
+	FROM NHATRO JOIN DANHGIA ON NHATRO.MANT = DANHGIA.MANT
+				JOIN NGUOIDUNG ON NGUOIDUNG.MAND = DANHGIA.MAND
+	WHERE MAQH = @MAQH
+		AND DIENTICH BETWEEN @DTMIN AND @DTMAX
+		AND NGAYDANGTIN BETWEEN @NGAYBD AND @NGAYKT
+		AND GIAPHONG BETWEEN @GIAMIN AND @GIAMAX
+		AND MALN = @MALN
+EXEC SPTIMTTNT 'QH02',20,50,'01-01-2021','12-12-2021',10000000,30000000,'LN02'
+SELECT * FROM NHATRO
+/*
+b. Viết một hàm có các tham số đầu vào tương ứng với tất cả các cột của bảng
+NGUOIDUNG. Hàm này trả về mã người dùng (giá trị của cột khóa chính của bảng
+NGUOIDUNG) thỏa mãn các giá trị được truyền vào tham số.*/
+IF OBJECT_ID('FNND') IS NOT NULL
+	DROP FUNCTION FNND
+GO
+CREATE FUNCTION FNND
+(
+@HOTEND NVARCHAR(50),@GIOITINH NVARCHAR(5), @SDT VARCHAR(15),@DIACHI NVARCHAR(50),@QUAN NVARCHAR(50),@EMAIL VARCHAR(50)
+)
+RETURNS VARCHAR(10)
+BEGIN
+	RETURN(SELECT MAND FROM NGUOIDUNG WHERE HOTENND = @HOTEND AND GIOITINH = @GIOITINH AND SDT=@SDT AND DIACHI = @DIACHI AND QUAN = @QUAN AND EMAIL=@EMAIL)
+END
+
+DECLARE @MAND VARCHAR (10)
+SET @MAND = DBO.FNND(N'ĐỖ MẠNH YẾU',N'NAM','0384659211',N'SỐ 1 ĐƯỜNG PHƯỜNG CANH',N'NAM TỪ LIÊM','YEUFPT@GMAIL.COM')
+SELECT @MAND AS MANGUOIDUNG
+/* c. Viết một hàm có tham số đầu vào là mã nhà trọ (cột khóa chính của bảng
+NHATRO). Hàm này trả về tổng số LIKE và DISLIKE của nhà trọ này.*/
+IF OBJECT_ID('FNTKE')IS NOT NULL
+	DROP FUNCTION FNTKE
+GO
+CREATE FUNCTION FNTKE(@MANT VARCHAR(10))
+RETURNS @THONGKE TABLE ([LIKE] INT,[DISLIKE] INT)
+BEGIN
+	DECLARE @SL INT = (SELECT COUNT(*)FROM DANHGIA WHERE MANT= @MANT)
+	DECLARE @LIKE INT = (SELECT COUNT(*) FROM DANHGIA WHERE MANT = @MANT AND [LIKE/DISLIKE]='TRUE')
+	INSERT @THONGKE VALUES (@LIKE,@SL - @LIKE)
+	RETURN
+END
+SELECT * FROM FNTKE('NT03')
+- Diện tích
+/*d. Tạo một View lưu thông tin của TOP 10 nhà trọ có số người dùng LIKE nhiều nhất
+- Giá
+- Mô tả
+- Ngày đăng tin
+- Tên người liên hệ
+- Địa chỉ
+- Điện thoại
+- Email*/
+IF OBJECT_ID('TOP10_W') IS NOT NULL
+	DROP VIEW TOP10_W
+GO
+CREATE VIEW TOP10_W
+AS
+	SELECT TOP 2 DIENTICH, GIAPHONG,MOTA,NGAYDANGTIN,HOTENND,NGUOIDUNG.DIACHI,SDT,EMAIL,COUNT([LIKE/DISLIKE]) AS SOLIKE 
+	FROM NHATRO JOIN DANHGIA ON NHATRO.MANT = DANHGIA.MANT
+	JOIN NGUOIDUNG ON NGUOIDUNG.MAND = DANHGIA.MAND
+	WHERE [LIKE/DISLIKE] = 1
+	GROUP BY DIENTICH,GIAPHONG,MOTA,NGAYDANGTIN,HOTENND,NGUOIDUNG.DIACHI,SDT,EMAIL
+	ORDER BY SOLIKE DESC
+	
+SELECT * FROM TOP10_W
+/*e. Viết một Stored Procedure nhận tham số đầu vào là mã nhà trọ (cột khóa chính
+của bảng NHATRO). SP này trả về tập kết quả gồm các thông tin sau:
+- Mã nhà trọ
+- Tên người đánh giá
+- Trạng thái LIKE hay DISLIKE
+- Nội dung đánh giá*/
+IF OBJECT_ID('SPTTNT') IS NOT NULL
+	DROP PROC SPTTNT
+GO
+CREATE PROC SPTTNT
+	@MANT VARCHAR(10)
+AS
+	IF @MANT IS NULL
+		PRINT N'DỮ LIỆU KHÔNG HỢP LỆ'
+	ELSE
+		SELECT MANT,HOTENND,[LIKE/DISLIKE],NOIDUNG
+		FROM DANHGIA JOIN NGUOIDUNG ON NGUOIDUNG.MAND = DANHGIA.MAND
+		WHERE MANT = @MANT
+EXEC SPTTNT NULL
+EXEC SPTTNT 'NT01'
+/*
+3. Xóa thông tin
+1. Viết một SP nhận một tham số đầu vào kiểu int là số lượng DISLIKE. SP này thực
+hiện thao tác xóa thông tin của các nhà trọ và thông tin đánh giá của chúng, nếu
+tổng số lượng DISLIKE tương ứng với nhà trọ này lớn hơn giá trị tham số được
+truyền vào.*/
+IF OBJECT_ID('SPXOANNT') IS NOT NULL
+	DROP PROC SPXOANT
+GO
+CREATE PROC SPXOANT
+	@DIS INT
+AS
+	BEGIN TRY
+		BEGIN TRAN
+			DECLARE @BANG TABLE(MANT VARCHAR(10),DIS INT)
+			INSERT @BANG SELECT MANT,COUNT([LIKE/DISLIKE]) AS SOLIKE FROM DANHGIA
+			WHERE	[LIKE/DISLIKE]= 0
+			GROUP BY MANT
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+	END CATCH
+
+/*
+Yêu cầu: Sử dụng giao dịch trong thân SP, để đảm bảo tính toàn vẹn dữ liệu khi
+một thao tác xóa thực hiện không thành công.
+2. Viết một SP nhận hai tham số đầu vào là khoảng thời gian đăng tin. SP này thực
+hiện thao tác xóa thông tin những nhà trọ được đăng trong khoảng thời gian
+được truyền vào qua các tham số.
+Lưu ý: SP cũng phải thực hiện xóa thông tin đánh giá của các nhà trọ này.
+Yêu cầu: Sử dụng giao dịch trong thân SP, để đảm bảo tính toàn vẹn dữ liệu khi
+một thao tác xóa thực hiện không thành công.*/
+	IF OBJECT_ID('SPXOATT') IS NOT NULL
+	DROP PROC SPXOATT
+GO
+CREATE PROC SPXOATT
+	@NGAYBD DATETIME, @NGAYKT DATETIME
+AS
+BEGIN TRY
+		BEGIN TRAN
+			---XÓA KHÓA NGOẠI FK
+			DELETE DANHGIA
+			WHERE MANT IN (SELECT MANT FROM NHATRO WHERE NGAYDANGTIN BETWEEN @NGAYBD AND @NGAYKT)
+			---XÓA KHÓA CHÍNH PK
+			DELETE NHATRO
+			WHERE NGAYDANGTIN BETWEEN @NGAYBD AND @NGAYKT
+		COMMIT TRAN
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+	END CATCH
+	EXEC SPXOATT '2021-01-26','2021-01-28'
+	SELECT * FROM NHATRO
+/*
+Y4. Yêu cầu quản trị CSDL
+- Tạo hai người dùng CSDL.
+
+COM203 – Quản trị CSDL với SQL Server Assignment
+
+o Một người dùng với vai trò nhà quản trị CSDL. Phân quyền cho người
+dùng này chỉ được phép thao tác trên CSDL quản lý nhà trọ cho thuê và
+có toàn quyền thao tác trên CSDL đó
+o Một người dùng thông thường. Phân cho người dùng này toàn bộ quyền
+thao tác trên các bảng của CSDL và quyền thực thi các SP và các hàm
+được tạo ra từ các yêu cầu trên
+
+- Kết nối tới Server bằng tài khoản của người dùng thứ nhất. Thực hiện tạo một
+bản sao CSDL.
+*/
